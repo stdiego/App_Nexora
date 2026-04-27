@@ -76,7 +76,7 @@ fun PantallaBienvenida(controladorNavegacion: NavHostController) {
             }
         }
 
-        // --- PARTE CENTRAL DINÁMICA ---
+        //  PARTE CENTRAL DINÁMICA
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             // El icono lee el color y la imagen de "pantallaActual"
             Icon(
@@ -101,7 +101,7 @@ fun PantallaBienvenida(controladorNavegacion: NavHostController) {
             )
         }
 
-        // BOTÓN INFERIOR INTELIGENTE
+        // BOTÓN INFERIOR
         Button(
             onClick = {
                 // Si ya estamos en la última (la 2), vamos al Login. Si no, avanzamos a la siguiente (+1)

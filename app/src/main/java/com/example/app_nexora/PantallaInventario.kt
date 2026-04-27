@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -26,9 +27,8 @@ import androidx.navigation.NavHostController
 @Composable
 fun PantallaInventario(controladorNavegacion: NavHostController, listaProductos: List<Producto>) {
 
-    // Paleta de colores de nuestro sistema
-    val colorPrimary = Color(0xFF00D166) // Verde Neón
-    val colorFondo = Color(0xFFF3F4F6)   // Gris pálido
+    val colorPrimary = Color(0xFF00D166)
+    val colorFondo   = Color(0xFFF3F4F6)
 
     Scaffold(
         topBar = {
@@ -43,7 +43,6 @@ fun PantallaInventario(controladorNavegacion: NavHostController, listaProductos:
             )
         },
         bottomBar = {
-            // MENÚ INFERIOR OMNIPRESENTE (Idéntico a Inicio y Ventas)
             NavigationBar(containerColor = Color.White, tonalElevation = 8.dp) {
                 NavigationBarItem(
                     selected = false, onClick = { controladorNavegacion.navigate("inicio") },
@@ -56,7 +55,7 @@ fun PantallaInventario(controladorNavegacion: NavHostController, listaProductos:
                     colors = NavigationBarItemDefaults.colors(unselectedIconColor = Color.Gray, unselectedTextColor = Color.Gray)
                 )
                 NavigationBarItem(
-                    selected = true, onClick = { }, // ESTAMOS JUSTO AQUÍ
+                    selected = true, onClick = { },
                     icon = { Icon(Icons.Default.List, contentDescription = "Productos") }, label = { Text("Productos") },
                     colors = NavigationBarItemDefaults.colors(selectedIconColor = Color(0xFF0F5132), selectedTextColor = Color(0xFF0F5132), indicatorColor = Color(0xFFE8F8F5))
                 )
@@ -68,7 +67,6 @@ fun PantallaInventario(controladorNavegacion: NavHostController, listaProductos:
             }
         },
         floatingActionButton = {
-            // Un botón flotante hiper moderno para agregar productos
             FloatingActionButton(
                 onClick = { controladorNavegacion.navigate("nuevo_producto") },
                 containerColor = colorPrimary,
@@ -83,7 +81,6 @@ fun PantallaInventario(controladorNavegacion: NavHostController, listaProductos:
         Column(
             modifier = Modifier.fillMaxSize().padding(paddingValores).background(colorFondo)
         ) {
-
             if (listaProductos.isEmpty()) {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -98,7 +95,13 @@ fun PantallaInventario(controladorNavegacion: NavHostController, listaProductos:
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     items(listaProductos) { producto ->
+
+                        // Calculamos el índice real del producto para la ruta
+                        val indice = listaProductos.indexOf(producto)
+
                         Card(
+                            // Al tocar la tarjeta, navegamos a la pantalla de edición con el índice
+                            onClick = { controladorNavegacion.navigate("editar_producto/$indice") },
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(20.dp),
                             colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -108,28 +111,38 @@ fun PantallaInventario(controladorNavegacion: NavHostController, listaProductos:
                                 modifier = Modifier.padding(16.dp).fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                // 1. CUDRO GRIS CON FOTO (EMOJI) DEL PRODUCTO
+                                // Cuadro de imagen del producto
                                 Surface(
                                     shape = RoundedCornerShape(16.dp),
                                     color = Color(0xFFF1F5F9),
                                     modifier = Modifier.size(64.dp)
-                                ) {
-                                }
+                                ) { }
 
-                                // 2. INFORMACIÓN DEL PRODUCTO
-                                Column(modifier = Modifier.padding(start = 16.dp).weight(1f)) {
+                                // Info del producto
+                                Column(
+                                    modifier = Modifier.padding(start = 16.dp).weight(1f)
+                                ) {
                                     Text(producto.nombre, fontSize = 18.sp, fontWeight = FontWeight.Medium, color = Color(0xFF1E272E))
-                                    Text("$${"%.2f".format(producto.precio)}", color = colorPrimary, fontWeight = FontWeight.Bold, fontSize = 15.sp, modifier = Modifier.padding(top = 4.dp))
+                                    Text(
+                                        "$${"%.2f".format(producto.precio)}",
+                                        color = colorPrimary, fontWeight = FontWeight.Bold,
+                                        fontSize = 15.sp, modifier = Modifier.padding(top = 4.dp)
+                                    )
                                     Text("En almacén: ${producto.cantidadEnStock} uds.", color = Color.Gray, fontSize = 13.sp)
                                 }
+
+                                // Ícono de editar al lado derecho
+                                Icon(
+                                    imageVector = Icons.Default.Edit,
+                                    contentDescription = "Editar",
+                                    tint = Color.LightGray,
+                                    modifier = Modifier.size(20.dp)
+                                )
                             }
                         }
                     }
 
-                    // Doble espaciado aquí abajo para que tu botón flotante NO tape al último producto
-                    item {
-                        Spacer(modifier = Modifier.height(80.dp))
-                    }
+                    item { Spacer(modifier = Modifier.height(80.dp)) }
                 }
             }
         }
