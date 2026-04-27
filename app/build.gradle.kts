@@ -38,6 +38,8 @@ android {
     buildFeatures {
         compose = true
     }
+
+
 }
 
 dependencies {
@@ -52,6 +54,7 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
 
+    ksp(libs.androidx.room.compiler) // 👈 ESTA ES LA CLAVE
 
     // Navigation Compose
     implementation("androidx.navigation:navigation-compose:2.8.5")
